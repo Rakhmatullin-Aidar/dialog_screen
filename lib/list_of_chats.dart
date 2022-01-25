@@ -1,8 +1,8 @@
-import 'package:dialog_screen/group_chat.dart';
 import 'package:dialog_screen/style.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'auth_service.dart';
+import 'chat.dart';
 
 
 class ChatsList extends StatefulWidget {
@@ -44,6 +44,16 @@ class _ChatsListState extends State<ChatsList> {
   }
 
 
+  Widget logOutButton () =>  TextButton(
+      onPressed: logOut,
+      child: const Text('Logout', style: TextStyle(color: Colors.white))
+  );
+
+  void logOut(){
+    AuthService().logOut();
+    Navigator.pop(context);
+  }
+
 
 
   Widget button () =>  Container(
@@ -60,19 +70,9 @@ class _ChatsListState extends State<ChatsList> {
     margin: const EdgeInsets.fromLTRB(0, 80, 0, 0),
     child: TextButton(
       onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const GroupChatPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Chat()));
       },
       child: const Text('Go to group chat', style: TextStyle(color: Colors.white)),
     ),
   );
-
-  Widget logOutButton () =>  TextButton(
-      onPressed: logOut,
-      child: const Text('Logout', style: TextStyle(color: Colors.white))
-  );
-
-  void logOut(){
-    AuthService().logOut();
-    Navigator.pop(context);
-  }
 }

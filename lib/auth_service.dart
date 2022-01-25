@@ -40,9 +40,9 @@ class AuthService {
   Future logOut() async{
     await _fAuth.signOut();
   }
-
-
 }
+
+
 
 
 class UserPassword {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dialog_screen/list_of_chats.dart';
+import 'package:dialog_screen/user.dart';
 import 'package:dialog_screen/validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,27 +37,37 @@ class _AuthorizationState extends State<Authorization> {
           title: const Text('Authorization'),
           centerTitle: true,
         ),
-        body: Form(
-          key: formKey,
-          child: Center(
-            child: SizedBox(
-              width: 300,
+        body: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Container(
+              width: double.infinity,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    validator: validateEmail,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    controller: emailController,
-                  ),
-                  TextFormField(
-                    validator: validatePassword,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    controller: passwordController,
-                  ),
-                  const SizedBox(height: 80),
-                  logInButton(),
-                  registerButton(),
+                  Container(
+                    width: 350,
+                    child: Column(
+                      children: [
+                        SizedBox(height: MediaQuery.of(context).size.height/4),
+                        TextFormField(
+                          validator: validateEmail,
+                          decoration: const InputDecoration(labelText: 'Email'),
+                          controller: emailController,
+                        ),
+                        TextFormField(
+                          obscureText: true,
+                          validator: validatePassword,
+                          decoration: const InputDecoration(labelText: 'Password'),
+                          controller: passwordController,
+                        ),
+                        const SizedBox(height: 80),
+                        logInButton(),
+                        registerButton(),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -146,10 +157,12 @@ class _AuthorizationState extends State<Authorization> {
     }
     else{
 
-      FirebaseFirestore.instance.collection('users').add({
-        'email': _email,
-        'password': _password
-      });
+      MyUser? _myUser = MyUser();
+
+      _myUser.email = _email;
+      _myUser.password = _password;
+
+      await FirebaseFirestore.instance.collection('users').add(_myUser.toJson());
 
       Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatsList()));
 
